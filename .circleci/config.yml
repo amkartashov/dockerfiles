@@ -1,0 +1,50 @@
+references:
+  build_docker_image: &build_docker_image
+    # Environment variables:
+    # In context: DOCKER_USER, DOCKER_PASS
+    # In job: BUILD_CONTEXT, IMAGE
+    docker:
+    - image: "docker:17.12.0-ce"
+    steps:
+    - run:
+        name: Install local git and ssh client
+        command: apk add --no-cache git openssh-client
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - run:
+        name: Docker Auth
+        command: echo "${DOCKER_PASS}" | docker login --password-stdin --username "${DOCKER_USER}"
+    - checkout
+    - run:
+        name: Build and push docker image
+        command: |
+          if git diff-tree --no-commit-id --name-only -r HEAD \
+             | awk '/\// {print}' | sed 's/\/.*//' \
+             | grep --quiet --fixed-strings --line-regexp "${BUILD_CONTEXT}"; then
+            TAG=${cat ${BUILD_CONTEXT}/tag}
+            docker build ${BUILD_CONTEXT} --tag "${IMAGE}:${TAG}"
+            docker tag "${IMAGE}:${TAG}" "${IMAGE}:latest"
+            docker push "${IMAGE}:${TAG}"
+            docker push "${IMAGE}:latest"
+          else
+            echo "No changes in ${BUILD_CONTEXT}/, skipping build"
+          fi
+
+
+
+version: 2
+
+workflows:
+  version: 2
+  build_docker_images:
+    jobs:
+    - sshct:
+        context: gorilych
+
+
+jobs:
+  sshct:
+    environment:
+      BUILD_CONTEXT: sshct
+      IMAGE: gorilych/sshct
+    <<: *build_docker_image
