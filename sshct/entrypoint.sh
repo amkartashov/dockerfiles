@@ -15,6 +15,7 @@ if [ -f /home/.$CTUSER.shadow -a \
      "$(stat --dereference --printf='%u %g %a' /home/.$CTUSER.shadow)" == "0 0 640" ]; then
   echo $CTUSER:"$(cat /home/.$CTUSER.shadow)" | chpasswd -e
 else
+  CTUSERPWD=${CTUSERPWD:-$(pwgen 12)}
   echo $CTUSER:"$CTUSERPWD" | chpasswd
 fi
 passwd -u $CTUSER
