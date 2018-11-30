@@ -29,7 +29,7 @@ references:
           if git diff-tree --no-commit-id --name-only -r HEAD \
              | awk '/\// {print}' | sed 's/\/.*//' \
              | grep -qxF "${BUILD_CONTEXT}"; then
-            TAG=${cat ${BUILD_CONTEXT}/tag}
+            TAG=$(cat ${BUILD_CONTEXT}/tag)
             docker build ${BUILD_CONTEXT} --tag "${IMAGE}:${TAG}"
             docker tag "${IMAGE}:${TAG}" "${IMAGE}:latest"
             docker push "${IMAGE}:${TAG}"
