@@ -18,9 +18,17 @@ references:
     - run:
         name: Build and push docker image
         command: |
+          # we need to check if there were changes in BUILD_CONTEXT
+          # `git diff-tree ..` will show all files changed in current commit
+          # `awk ..| sed ..` will print only directories
+          # `grep -qxF` will success if BUILD_CONTEXT is found in directories
+          # grep options:
+          #  -q: Quiet. Return 0 if PATTERN is found, 1 otherwise
+          #  -x: Match whole lines only
+          #  -F: PATTERN is a literal (not regexp)
           if git diff-tree --no-commit-id --name-only -r HEAD \
              | awk '/\// {print}' | sed 's/\/.*//' \
-             | grep --quiet --fixed-strings --line-regexp "${BUILD_CONTEXT}"; then
+             | grep -qxF "${BUILD_CONTEXT}"; then
             TAG=${cat ${BUILD_CONTEXT}/tag}
             docker build ${BUILD_CONTEXT} --tag "${IMAGE}:${TAG}"
             docker tag "${IMAGE}:${TAG}" "${IMAGE}:latest"
