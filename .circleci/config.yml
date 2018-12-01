@@ -48,6 +48,8 @@ workflows:
     jobs:
     - sshct:
         context: gorilych
+    - go-andrey:
+        context: gorilych
 
 
 jobs:
@@ -55,4 +57,9 @@ jobs:
     environment:
       BUILD_CONTEXT: sshct
       IMAGE: gorilych/sshct
+    <<: *build_docker_image
+  go-andrey:
+    environment:
+      BUILD_CONTEXT: go-andrey
+      IMAGE: gorilych/go-andrey
     <<: *build_docker_image
