@@ -7,8 +7,8 @@ ENV RELEASE 0.0.1
 RUN useradd -u 10001 myapp
 
 RUN mkdir -p /go/src/github.com/gorilych/go-andrey
-ADD . /go/src/github.com/gorilych/go-andrey
 WORKDIR /go/src/github.com/gorilych/go-andrey
+RUN git clone https://github.com/gorilych/go-andrey.git .
 
 # build the binary with go build
 RUN CGO_ENABLED=0 go build \
