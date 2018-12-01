@@ -1,7 +1,7 @@
 # Stage 1. Build the binary
 FROM golang:1.11
 
-ENV RELEASE 0.0.1
+ENV RELEASE 0.0.2
 
 # add a non-privileged user
 RUN useradd -u 10001 myapp
