@@ -50,6 +50,8 @@ workflows:
         context: gorilych
     - go-andrey:
         context: gorilych
+    - dst:
+        context: gorilych
 
 
 jobs:
@@ -62,4 +64,9 @@ jobs:
     environment:
       BUILD_CONTEXT: go-andrey
       IMAGE: gorilych/go-andrey
+    <<: *build_docker_image
+  dst:
+    environment:
+      BUILD_CONTEXT: dst
+      IMAGE: gorilych/dst
     <<: *build_docker_image
