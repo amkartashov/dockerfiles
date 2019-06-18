@@ -26,6 +26,14 @@ references:
           #  -q: Quiet. Return 0 if PATTERN is found, 1 otherwise
           #  -x: Match whole lines only
           #  -F: PATTERN is a literal (not regexp)
+          echo ========== Current dir
+          pwd; ls -la
+          echo ========== Changed files in the last commit
+          git diff-tree --no-commit-id --name-only -r HEAD
+          echo ========== Changed directories in the last commit
+          git diff-tree --no-commit-id --name-only -r HEAD \
+          | awk '/\// {print}' | sed 's/\/.*//' \
+          | sort | uniq
           if git diff-tree --no-commit-id --name-only -r HEAD \
              | awk '/\// {print}' | sed 's/\/.*//' \
              | grep -qxF "${BUILD_CONTEXT}"; then
