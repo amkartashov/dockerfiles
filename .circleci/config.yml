@@ -84,7 +84,6 @@ jobs:
     <<: *build_docker_image
   httpbin:
     environment:
-      HTTBIN_GIT_TAG: v0.6.0
       BUILD_CONTEXT: httpbin
       IMAGE: gorilych/httpbin
     <<: *build_docker_image
