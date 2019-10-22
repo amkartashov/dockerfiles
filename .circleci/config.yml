@@ -104,7 +104,7 @@ jobs:
         command: |
           IMAGE_TAG=$(cat httpbin/tag)
           mkdir -p ~/.ssh/
-          . > ~/.ssh/id_rsa
+          : > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo -n "${CONFIG_REPO_SSH_KEY64}" | base64 -d >> ~/.ssh/id_rsa
           git clone ${CONFIG_REPO} __config_repo__ && cd __config_repo__
