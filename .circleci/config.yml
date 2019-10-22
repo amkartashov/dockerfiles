@@ -9,8 +9,6 @@ references:
     - run:
         name: Install local git and ssh client
         command: apk add --no-cache git openssh-client
-    - setup_remote_docker:
-        docker_layer_caching: true
     - run:
         name: Docker Auth
         command: echo "${DOCKER_PASS}" | docker login --password-stdin --username "${DOCKER_USER}"
