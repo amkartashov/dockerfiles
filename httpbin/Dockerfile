@@ -1,6 +1,6 @@
 FROM alpine/git:1.0.7 AS git
 WORKDIR /httpbin
-ENV HTTPBIN_GIT_TAG v0.6.0
+ENV HTTPBIN_GIT_TAG v0.7.0
 RUN git clone https://github.com/postmanlabs/httpbin.git . && \
     git checkout ${HTTPBIN_GIT_TAG} && \
     rm -rf .git/ .gitignore
