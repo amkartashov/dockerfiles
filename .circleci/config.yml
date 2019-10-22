@@ -97,16 +97,15 @@ jobs:
         name: update image tag in httpbin-config-repo
         environment:
           CONFIG_REPO: git@github.com:scalio/httpbin-config-repo.git
-
           # CONFIG_REPO_SSH_KEY64: from CircleCI project
           VALUES_FILE: values-httpbin.scaliolabs.com.yaml
-          GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+          GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ~/.ssh/config_repo_key
         command: |
           IMAGE_TAG=$(cat httpbin/tag)
           mkdir -p ~/.ssh/
-          : > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          echo -n "${CONFIG_REPO_SSH_KEY64}" | base64 -d >> ~/.ssh/id_rsa
+          : > ~/.ssh/config_repo_key
+          chmod 600 ~/.ssh/config_repo_key
+          echo -n "${CONFIG_REPO_SSH_KEY64}" | base64 -d >> ~/.ssh/config_repo_key
           git clone ${CONFIG_REPO} __config_repo__ && cd __config_repo__
           sed -i 's/^    tag:.*/    tag: '${IMAGE_TAG}'/' ${VALUES_FILE}
           git config user.name "CircleCI/${CIRCLE_PROJECT_USERNAME}"
