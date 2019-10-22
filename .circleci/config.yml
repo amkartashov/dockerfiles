@@ -4,7 +4,7 @@ references:
     # In context: DOCKER_USER, DOCKER_PASS
     # In job: BUILD_CONTEXT, IMAGE
     docker:
-    - image: "docker:18"
+    - image: "docker:19"
     steps:
     - run:
         name: Install local git and ssh client
