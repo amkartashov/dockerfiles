@@ -101,7 +101,7 @@ jobs:
           VALUES_FILE: values-httpbin.scaliolabs.com.yaml
           GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
         command: |
-          IMAGE_TAG=$(cat tag)
+          IMAGE_TAG=$(cat httpbin/tag)
           mkdir -p ~/.ssh/
           . > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
