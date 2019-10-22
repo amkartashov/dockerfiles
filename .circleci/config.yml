@@ -90,7 +90,7 @@ jobs:
   deploy_httpbin:
     docker:
     # any image wit git will work
-    - image: circleci/golang
+    - image: alpine/git:1.0.7
     steps:
     - checkout
     - run:
