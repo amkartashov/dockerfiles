@@ -18,10 +18,10 @@ commands:
         echo "$CHANGES"
         echo ==
         if test -z "$CHANGES"; then
-          echo "Changes were found in << parameters.folder >>, continue build"
-        else
           echo "No changes in << parameters.folder >>, stop build"
           circleci step halt
+        else
+          echo "Changes were found in << parameters.folder >>, continue build"
         fi
   build_docker_image:
     description: "build docker image in specified context"
