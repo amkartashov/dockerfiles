@@ -12,15 +12,17 @@ commands:
       folder:
         type: string
     steps:
-      - run: |
-          if git diff-tree --no-commit-id --name-only -r HEAD HEAD~1 \
-            | awk '/\// {print}' | sed 's/\/.*//' \
-            | grep -qxF "<< parameters.folder >>"; then
-            echo "Changes were found in << parameters.folder >>, continue build"
-          else
-            echo "No changes in << parameters.folder >>, fail build"
-            circleci step halt
-          fi
+    - run: |
+        CHANGES=$(git diff --name-only HEAD~1 << parameters.folder >>)
+        echo == Changed files in << parameters.folder >>:
+        echo "$CHANGES"
+        echo ==
+        if test -z "$CHANGES"; then
+          echo "Changes were found in << parameters.folder >>, continue build"
+        else
+          echo "No changes in << parameters.folder >>, stop build"
+          circleci step halt
+        fi
   build_docker_image:
     description: "build docker image in specified context"
     parameters:
