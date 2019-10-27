@@ -16,7 +16,8 @@ RUN apt-get update -y && \
     openssh-server bash tmux curl sudo less vim gnupg ca-certificates \
     dialog locales man bash-completion wget apt-file telnet \
     dnsutils git pwgen python bc unzip zip graphviz whois mysql-client \
-    lsof file postgresql-client build-essential htop
+    lsof file postgresql-client build-essential htop apt-transport-https \
+    lsb-release software-properties-common dirmngr debian-archive-keyring
 
 ADD sshd_config /etc/ssh/sshd_config
 ADD entrypoint.sh /bin/entrypoint
