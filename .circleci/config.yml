@@ -46,7 +46,6 @@ references:
           fi
 
 
-
 version: 2
 
 workflows:
@@ -59,12 +58,6 @@ workflows:
         context: gorilych
     - dst:
         context: gorilych
-    - httpbin:
-        context: gorilych
-    - deploy_httpbin:
-        requires:
-        - httpbin
-
 
 jobs:
   sshct:
@@ -82,44 +75,3 @@ jobs:
       BUILD_CONTEXT: dst
       IMAGE: gorilych/dst
     <<: *build_docker_image
-  httpbin:
-    environment:
-      BUILD_CONTEXT: httpbin
-      IMAGE: gorilych/httpbin
-    <<: *build_docker_image
-  deploy_httpbin:
-    docker:
-    # any image wit git will work
-    - image: alpine/git:1.0.7
-    steps:
-    - checkout
-    - run:
-        name: update image tag in httpbin-config-repo
-        environment:
-          CONFIG_REPO: git@github.com:scalio/httpbin-config-repo.git
-          # CONFIG_REPO_SSH_KEY64: from CircleCI project
-          VALUES_FILE: values-httpbin.scaliolabs.com.yaml
-          GIT_SSH_COMMAND: ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ~/.ssh/config_repo_key
-        command: |
-          IMAGE_TAG=$(cat httpbin/tag)
-          mkdir -p ~/.ssh/
-          : > ~/.ssh/config_repo_key
-          chmod 600 ~/.ssh/config_repo_key
-          echo -n "${CONFIG_REPO_SSH_KEY64}" | base64 -d >> ~/.ssh/config_repo_key
-          git clone ${CONFIG_REPO} __config_repo__ && cd __config_repo__
-          sed -i 's/^    tag:.*/    tag: '${IMAGE_TAG}'/' ${VALUES_FILE}
-          git config user.name "CircleCI/${CIRCLE_PROJECT_USERNAME}"
-          git config user.email ''
-          git commit ${VALUES_FILE} -F- <<-EOFMESSAGE
-          set image tag to ${IMAGE_TAG}
-
-          Commit from CircleCI triggered by
-           build: ${CIRCLE_BUILD_URL}
-           commit: ${CIRCLE_SHA1}
-           tag: ${CIRCLE_TAG}
-           branch: ${CIRCLE_BRANCH}
-           repo: ${CIRCLE_REPOSITORY_URL}
-           user: ${CIRCLE_PROJECT_USERNAME}
-          EOFMESSAGE
-          git push
-
