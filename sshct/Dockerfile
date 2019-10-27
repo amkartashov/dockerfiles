@@ -19,7 +19,7 @@ RUN apt-get update -y && \
     lsof file postgresql-client build-essential htop apt-transport-https \
     lsb-release software-properties-common dirmngr debian-archive-keyring \
     && \
-    CLOUD_SDK_REPO="cloud-sdk-stretch" \
+    CLOUD_SDK_REPO="cloud-sdk-stretch" && \
     echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" \
     > /etc/apt/sources.list.d/google-cloud-sdk.list && \
     curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg \
