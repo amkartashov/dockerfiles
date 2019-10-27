@@ -31,7 +31,7 @@ RUN apt-get update -y && \
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" \
     >  /etc/apt/sources.list.d/azure-cli.list && \
     apt-get update && \
-    apt-get install -y google-cloud-sdk azure-cli
+    apt-get install -y google-cloud-sdk azure-cli kubectl
 
 ADD sshd_config /etc/ssh/sshd_config
 ADD entrypoint.sh /bin/entrypoint
