@@ -43,7 +43,7 @@ RUN apt-get update -y && \
     echo "deb https://deb.nodesource.com/node_10.x stretch main" \
     > /etc/apt/sources.list.d/nodesource.list && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" \
-    > /etc/apt/sources.list.d/yarn.list &&
+    > /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y google-cloud-sdk \
     azure-cli kubectl git-lfs mongodb-org-shell mongodb-org-tools nodejs yarn
