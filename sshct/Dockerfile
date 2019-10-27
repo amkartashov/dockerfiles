@@ -17,7 +17,15 @@ RUN apt-get update -y && \
     dialog locales man bash-completion wget apt-file telnet \
     dnsutils git pwgen python bc unzip zip graphviz whois mysql-client \
     lsof file postgresql-client build-essential htop apt-transport-https \
-    lsb-release software-properties-common dirmngr debian-archive-keyring
+    lsb-release software-properties-common dirmngr debian-archive-keyring \
+    && \
+    CLOUD_SDK_REPO="cloud-sdk-stretch" \
+    echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" \
+    > /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
+    | apt-key add - && \
+    apt-get update && apt-get install -y google-cloud-sdk \
+
 
 ADD sshd_config /etc/ssh/sshd_config
 ADD entrypoint.sh /bin/entrypoint
