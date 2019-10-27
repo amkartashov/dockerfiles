@@ -1,10 +1,33 @@
-references:
-  build_docker_image: &build_docker_image
-    # Environment variables:
-    # In context: DOCKER_USER, DOCKER_PASS
-    # In job: BUILD_CONTEXT, IMAGE
+version: 2.1
+
+executors:
+  docker19:
     docker:
-    - image: "docker:19"
+    - image: docker:19
+
+commands:
+  check_if_changed:
+    description: "Check if folder was changed. If no changes - skip tests, complete job"
+    parameters:
+      folder:
+        type: string
+    steps:
+      - run: |
+          if git diff-tree --no-commit-id --name-only -r HEAD HEAD~1 \
+            | awk '/\// {print}' | sed 's/\/.*//' \
+            | grep -qxF "<< parameters.folder >>"; then
+            echo "Changes were found in << parameters.folder >>, continue build"
+          else
+            echo "No changes in << parameters.folder >>, fail build"
+            circleci step halt
+          fi
+  build_docker_image:
+    description: "build docker image in specified context"
+    parameters:
+      context:
+        type: string
+      image:
+        type: string
     steps:
     - run:
         name: Install local git and ssh client
@@ -14,39 +37,18 @@ references:
         name: Docker Auth
         command: echo "${DOCKER_PASS}" | docker login --password-stdin --username "${DOCKER_USER}"
     - checkout
+    - check_if_changed:
+        folder: << parameters.context >>
     - run:
         name: Build and push docker image
         command: |
-          # we need to check if there were changes in BUILD_CONTEXT
-          # `git diff-tree ..` will show all files changed in current commit
-          # `awk ..| sed ..` will print only directories
-          # `grep -qxF` will success if BUILD_CONTEXT is found in directories
-          # grep options:
-          #  -q: Quiet. Return 0 if PATTERN is found, 1 otherwise
-          #  -x: Match whole lines only
-          #  -F: PATTERN is a literal (not regexp)
-          echo ========== Current dir
-          pwd; ls -la
-          echo ========== Changed files in the last commit
-          git diff-tree --no-commit-id --name-only -r HEAD
-          echo ========== Changed directories in the last commit
-          git diff-tree --no-commit-id --name-only -r HEAD \
-          | awk '/\// {print}' | sed 's/\/.*//' \
-          | sort | uniq
-          if git diff-tree --no-commit-id --name-only -r HEAD \
-             | awk '/\// {print}' | sed 's/\/.*//' \
-             | grep -qxF "${BUILD_CONTEXT}"; then
-            TAG=$(cat ${BUILD_CONTEXT}/tag)
-            docker build ${BUILD_CONTEXT} --tag "${IMAGE}:${TAG}"
-            docker tag "${IMAGE}:${TAG}" "${IMAGE}:latest"
-            docker push "${IMAGE}:${TAG}"
-            docker push "${IMAGE}:latest"
-          else
-            echo "No changes in ${BUILD_CONTEXT}/, skipping build"
-          fi
-
-
-version: 2
+          BUILD_CONTEXT=<< parameters.context >>
+          IMAGE=<< parameters.image >>
+          TAG=$(cat ${BUILD_CONTEXT}/tag)
+          docker build ${BUILD_CONTEXT} --tag "${IMAGE}:${TAG}"
+          docker tag "${IMAGE}:${TAG}" "${IMAGE}:latest"
+          docker push "${IMAGE}:${TAG}"
+          docker push "${IMAGE}:latest"
 
 workflows:
   version: 2
@@ -61,17 +63,21 @@ workflows:
 
 jobs:
   sshct:
-    environment:
-      BUILD_CONTEXT: sshct
-      IMAGE: gorilych/sshct
-    <<: *build_docker_image
+    executor: docker19
+    steps:
+    - build_docker_image:
+        context: sshct
+        image: gorilych/sshct
+
   go-andrey:
-    environment:
-      BUILD_CONTEXT: go-andrey
-      IMAGE: gorilych/go-andrey
-    <<: *build_docker_image
+    executor: docker19
+    steps:
+    - build_docker_image:
+        context: go-andrey
+        image: gorilych/go-andrey
   dst:
-    environment:
-      BUILD_CONTEXT: dst
-      IMAGE: gorilych/dst
-    <<: *build_docker_image
+    executor: docker19
+    steps:
+    - build_docker_image:
+        context: dst
+        image: gorilych/dst
