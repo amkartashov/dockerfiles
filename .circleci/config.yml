@@ -31,6 +31,9 @@ commands:
       image:
         type: string
     steps:
+    - checkout
+    - check_if_changed:
+        folder: << parameters.context >>
     - run:
         name: Install local git and ssh client
         command: apk add --no-cache git openssh-client
@@ -38,9 +41,6 @@ commands:
     - run:
         name: Docker Auth
         command: echo "${DOCKER_PASS}" | docker login --password-stdin --username "${DOCKER_USER}"
-    - checkout
-    - check_if_changed:
-        folder: << parameters.context >>
     - run:
         name: Build and push docker image
         command: |
