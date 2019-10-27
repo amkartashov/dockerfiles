@@ -27,6 +27,9 @@ RUN apt-get update -y && \
     curl -L https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
                 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
+    | apt-key add - && \
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     CLOUD_SDK_REPO="cloud-sdk-stretch" && \
     echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" \
     > /etc/apt/sources.list.d/google-cloud-sdk.list && \
@@ -37,9 +40,13 @@ RUN apt-get update -y && \
     >  /etc/apt/sources.list.d/git-lfs.list && \
     echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" \
     > /etc/apt/sources.list.d/mongodb-org-4.0.list && \
+    echo "deb https://deb.nodesource.com/node_10.x stretch main" \
+    > /etc/apt/sources.list.d/nodesource.list && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" \
+    > /etc/apt/sources.list.d/yarn.list &&
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y google-cloud-sdk \
-    azure-cli kubectl git-lfs mongodb-org-shell mongodb-org-tools
+    azure-cli kubectl git-lfs mongodb-org-shell mongodb-org-tools nodejs yarn
 
 ADD sshd_config /etc/ssh/sshd_config
 ADD entrypoint.sh /bin/entrypoint
