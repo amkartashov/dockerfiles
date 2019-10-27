@@ -22,7 +22,7 @@ RUN apt-get update -y && \
     CLOUD_SDK_REPO="cloud-sdk-stretch" \
     echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" \
     > /etc/apt/sources.list.d/google-cloud-sdk.list && \
-    curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
+    curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg \
     | apt-key add - && \
     apt-get update && apt-get install -y google-cloud-sdk \
 
