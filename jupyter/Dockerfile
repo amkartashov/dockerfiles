@@ -10,6 +10,11 @@ RUN apt update && \
     rm -f roswell.deb && \
     rm -rf /var/lib/apt/lists
 
+# install https://github.com/jupyterhub/oauthenticator
+USER ${NB_USER}
+RUN pip install --user jupyter oauthenticator
+
+# install Common Lisp kernel
 USER ${NB_USER}
 ENV PATH "${HOME}/.roswell/bin:${HOME}/.local/bin:${PATH}"
 RUN rm -rf roswell && \
