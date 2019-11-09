@@ -1,10 +1,8 @@
 ARG BASE_NOTEBOOK_TAG=python-3.7.3
-ARG ROSWELL_VER=19.09.12.102
-
 FROM jupyter/base-notebook:$BASE_NOTEBOOK_TAG
 
+ARG ROSWELL_VER=19.09.12.102
 USER root
-
 RUN apt update && \
     wget https://github.com/roswell/roswell/releases/download/v${ROSWELL_VER}/roswell_${ROSWELL_VER}-1_amd64.deb \
     --quiet --output-document roswell.deb && \
