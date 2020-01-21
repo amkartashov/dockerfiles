@@ -33,6 +33,7 @@ RUN apt-get update -y && \
     curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
     | apt-key add - && \
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    curl -sS https://bazel.build/bazel-release.pub.gpg | apt-key add - && \
     DEB_RELEASE=$(lsb_release -cs) && \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" \
     > /etc/apt/sources.list.d/google-cloud-sdk.list && \
@@ -46,9 +47,12 @@ RUN apt-get update -y && \
     > /etc/apt/sources.list.d/nodesource.list && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" \
     > /etc/apt/sources.list.d/yarn.list && \
+    echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" \
+    > /etc/apt/sources.list.d/bazel.list && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y google-cloud-sdk \
-    azure-cli kubectl git-lfs mongodb-org-shell mongodb-org-tools nodejs yarn
+    azure-cli kubectl git-lfs mongodb-org-shell mongodb-org-tools nodejs yarn \
+    bazel bazel-1.2.1
 
 ADD sshd_config /etc/ssh/sshd_config
 ADD entrypoint.sh /bin/entrypoint
