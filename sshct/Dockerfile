@@ -18,6 +18,7 @@ RUN apt-get update -y && \
     dnsutils git pwgen python bc unzip zip graphviz whois mariadb-client \
     lsof file postgresql-client build-essential htop apt-transport-https \
     lsb-release software-properties-common dirmngr debian-archive-keyring \
+    openjdk-11-jdk \
     && \
     curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg \
     | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
