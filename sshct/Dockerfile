@@ -23,9 +23,8 @@ RUN apt-get update -y && \
     && \
     curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg \
     | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
-    apt-key --keyring /etc/apt/trusted.gpg.d/Microsoft.gpg adv \
-        --keyserver packages.microsoft.com \
-        --recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF && \
+    curl -sL https://packages.microsoft.com/keys/microsoft.asc \
+    | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg && \
     curl -L https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
                 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
