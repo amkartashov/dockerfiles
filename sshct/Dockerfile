@@ -18,7 +18,8 @@ RUN apt-get update -y && \
     dnsutils git pwgen python bc unzip zip graphviz whois mariadb-client \
     lsof file postgresql-client build-essential htop apt-transport-https \
     lsb-release software-properties-common dirmngr debian-archive-keyring \
-    openjdk-11-jdk python-pip python3-pip \
+    openjdk-11-jdk python-pip python3-pip jq netcat strace apache2-utils \
+    gdb redis-tools \
     && \
     curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg \
     | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
@@ -52,7 +53,7 @@ RUN apt-get update -y && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y google-cloud-sdk \
     azure-cli kubectl git-lfs mongodb-org-shell mongodb-org-tools nodejs yarn \
-    bazel bazel-1.2.1
+    bazel bazel-1.2.1 bazel-2.1.1 bazel-2.2.0 bazel-3.0.0
 
 ADD sshd_config /etc/ssh/sshd_config
 ADD entrypoint.sh /bin/entrypoint
@@ -62,4 +63,4 @@ RUN chmod +x /bin/init.sh
 
 RUN mkdir /var/run/sshd
 RUN echo '%sudo   ALL=(ALL:ALL) NOPASSWD: ALL' >> /etc/sudoers
- 
+
