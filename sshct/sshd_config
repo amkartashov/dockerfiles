@@ -8,3 +8,6 @@ PrintMotd no
 IgnoreUserKnownHosts yes
 PermitRootLogin no
 PermitEmptyPasswords no
+HostKey /home/.sshkeys/ssh_host_ed25519_key
+HostKey /home/.sshkeys/ssh_host_ecdsa_key
+HostKey /home/.sshkeys/ssh_host_rsa_key
