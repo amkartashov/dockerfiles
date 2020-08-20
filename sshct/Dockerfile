@@ -11,6 +11,8 @@ ENV CTTIMEZONE Asia/Novosibirsk
 ENV CTLOCALE ru_RU.UTF-8
 ENV PUBKEY none
 
+# 9DA31620334BD75D9DCB49F368818C72E52529D4 - MongoDB 4.0 Release Signing Key
+# 2EE0EA64E40A89B84B2DF73499E82A75642AC823 - sbt build tool key
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     openssh-server bash tmux curl sudo less vim gnupg ca-certificates \
@@ -28,6 +30,8 @@ RUN apt-get update -y && \
     curl -L https://packagecloud.io/github/git-lfs/gpgkey | apt-key add - && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
                 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+                --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
     curl -sS https://www.mongodb.org/static/pgp/server-4.2.asc \
     | apt-key add - && \
     curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
@@ -49,10 +53,12 @@ RUN apt-get update -y && \
     > /etc/apt/sources.list.d/yarn.list && \
     echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" \
     > /etc/apt/sources.list.d/bazel.list && \
+    echo "deb https://dl.bintray.com/sbt/debian /" \
+    > /etc/apt/sources.list.d/sbt.list && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y google-cloud-sdk \
     azure-cli kubectl git-lfs mongodb-org-shell mongodb-org-tools nodejs yarn \
-    bazel bazel-1.2.1 bazel-2.1.1 bazel-2.2.0 bazel-3.0.0
+    bazel bazel-1.2.1 bazel-2.1.1 bazel-2.2.0 bazel-3.0.0 sbt
 
 ADD sshd_config /etc/ssh/sshd_config
 ADD entrypoint.sh /bin/entrypoint
