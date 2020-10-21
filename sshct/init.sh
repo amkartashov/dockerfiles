@@ -8,7 +8,7 @@ date
 # Install additional packages
 echo ====== Installing additional packages
 if [ -f /home/.packages ]; then
-  cat /home/.packages | xargs --max-args=1 apt-get install -y
+  cat /home/.packages | xargs apt-get install -y --no-install-recommends
 fi
 
 # Run custom scripts /home/.scripts/*.sh
