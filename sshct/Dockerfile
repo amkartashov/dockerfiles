@@ -22,7 +22,7 @@ RUN apt-get update -y && \
     lsb-release software-properties-common dirmngr debian-archive-keyring \
     openjdk-11-jdk python-pip python3-pip jq netcat strace apache2-utils \
     gdb redis-tools tree protobuf-compiler golang-goprotobuf-dev ruby-full \
-    scala uuid-runtime \
+    scala uuid-runtime psmisc oathtool kpcli \
     && \
     curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg \
     | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
