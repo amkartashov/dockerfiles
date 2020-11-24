@@ -1,4 +1,4 @@
-FROM debian:10
+FROM ubuntu:20.04
 
 VOLUME /home
 EXPOSE 22
@@ -20,7 +20,7 @@ RUN apt-get update -y && \
     dnsutils git pwgen python bc unzip zip graphviz whois mariadb-client \
     lsof file postgresql-client build-essential htop apt-transport-https \
     lsb-release software-properties-common dirmngr debian-archive-keyring \
-    openjdk-11-jdk python-pip python3-pip jq netcat strace apache2-utils \
+    openjdk-11-jdk python3-pip jq netcat strace apache2-utils \
     gdb redis-tools tree protobuf-compiler golang-goprotobuf-dev ruby-full \
     scala uuid-runtime psmisc oathtool kpcli libvirt-clients \
     && \
@@ -33,7 +33,7 @@ RUN apt-get update -y && \
                 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
                 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823 && \
-    curl -sS https://www.mongodb.org/static/pgp/server-4.2.asc \
+    curl -sS https://www.mongodb.org/static/pgp/server-4.4.asc \
     | apt-key add - && \
     curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key \
     | apt-key add - && \
@@ -44,10 +44,10 @@ RUN apt-get update -y && \
     > /etc/apt/sources.list.d/google-cloud-sdk.list && \
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $DEB_RELEASE main" \
     >  /etc/apt/sources.list.d/azure-cli.list && \
-    echo "deb https://packagecloud.io/github/git-lfs/debian/ $DEB_RELEASE main" \
-    >  /etc/apt/sources.list.d/git-lfs.list && \
-    echo "deb http://repo.mongodb.org/apt/debian $DEB_RELEASE/mongodb-org/4.2 main" \
-    > /etc/apt/sources.list.d/mongodb-org-4.2.list && \
+    echo "deb https://packagecloud.io/github/git-lfs/ubuntu/ $DEB_RELEASE main" \
+    >  /etc/apt/sources.list.d/github_git-lfs.list && \
+    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $DEB_RELEASE/mongodb-org/4.4 multiverse" \
+    > /etc/apt/sources.list.d/mongodb-org-4.4.list && \
     echo "deb https://deb.nodesource.com/node_12.x $DEB_RELEASE main" \
     > /etc/apt/sources.list.d/nodesource.list && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" \
