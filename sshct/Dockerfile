@@ -11,6 +11,9 @@ ENV CTTIMEZONE Asia/Novosibirsk
 ENV CTLOCALE ru_RU.UTF-8
 ENV PUBKEY none
 
+# Unminimize, see https://wiki.ubuntu.com/Minimal
+RUN yes | unminimize
+
 # 9DA31620334BD75D9DCB49F368818C72E52529D4 - MongoDB 4.0 Release Signing Key
 # 2EE0EA64E40A89B84B2DF73499E82A75642AC823 - sbt build tool key
 RUN apt-get update -y && \
