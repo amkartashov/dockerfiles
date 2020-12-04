@@ -64,6 +64,8 @@ workflows:
         context: gorilych
     - jupyter:
         context: gorilych
+    - ubuntu2004-rbe:
+        context: gorilych
 
 jobs:
   sshct:
@@ -90,3 +92,10 @@ jobs:
     - build_docker_image:
         context: jupyter
         image: gorilych/jupyter
+  ubuntu2004-rbe:
+    executor: docker19
+    steps:
+    - build_docker_image:
+        context: ubuntu2004-rbe
+        image: gorilych/ubuntu2004-rbe
+
