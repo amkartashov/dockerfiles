@@ -26,6 +26,7 @@ RUN apt-get update -y && \
     openjdk-11-jdk python3-pip jq netcat strace apache2-utils \
     gdb redis-tools tree protobuf-compiler golang-goprotobuf-dev ruby-full \
     scala uuid-runtime psmisc oathtool kpcli libvirt-clients \
+    iputils-ping iputils-tracepath ipcalc iproute2 \
     && \
     curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg \
     | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
