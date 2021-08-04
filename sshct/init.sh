@@ -2,8 +2,7 @@
 
 exec >>/home/.init.log 2>&1
 
-echo ====================== INIT START
-date
+echo ====================== INIT START $(date)
 
 # Install additional packages
 echo ====== Installing additional packages
@@ -25,4 +24,4 @@ if [ -d /home/.scripts ]; then
   done
 fi
 
-echo ====================== INIT END
+echo ====================== INIT END $(date)
