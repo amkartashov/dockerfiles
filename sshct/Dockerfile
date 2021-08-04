@@ -93,7 +93,7 @@ RUN apt-get update -y && \
     python python3-pip libpython3-dev \
     openjdk-11-jdk \
     protobuf-compiler golang-goprotobuf-dev \
-    clang lldb lld \
+    clang lldb lld clang-format \
     clojure leiningen \
     cmake cmake-doc ninja-build \
     qemu binfmt-support qemu-user-static \
