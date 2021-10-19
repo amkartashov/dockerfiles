@@ -1,31 +1,39 @@
-#!/bin/sh
+#!/bin/bash
 
-echo $CTTIMEZONE > /etc/timezone
-ln -sf /usr/share/zoneinfo/$CTTIMEZONE /etc/localtime
+echo ${CTTIMEZONE} > /etc/timezone
+ln -sf /usr/share/zoneinfo/${CTTIMEZONE} /etc/localtime
 dpkg-reconfigure -f noninteractive tzdata
 
 sed -i -e "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/" /etc/locale.gen
-sed -i -e "s/# $CTLOCALE UTF-8/$CTLOCALE UTF-8/" /etc/locale.gen
+sed -i -e "s/# ${CTLOCALE} UTF-8/${CTLOCALE} UTF-8/" /etc/locale.gen
 dpkg-reconfigure --frontend=noninteractive locales
-update-locale LANG=$CTLOCALE
+update-locale LANG=${CTLOCALE}
 
-echo "AllowUsers $CTUSER" >> /etc/ssh/sshd_config
-useradd --uid $CTUSERID --user-group --shell /bin/bash $CTUSER
-if [ -f /home/.$CTUSER.shadow -a \
-     "$(stat --dereference --printf='%u %g %a' /home/.$CTUSER.shadow)" == "0 0 640" ]; then
-  echo $CTUSER:"$(cat /home/.$CTUSER.shadow)" | chpasswd -e
+echo "AllowUsers ${CTUSER}" >> /etc/ssh/sshd_config
+useradd --uid ${CTUSERID} --user-group --shell /bin/bash ${CTUSER}
+if [ -f /home/.${CTUSER}.shadow -a \
+     "$(stat --dereference --printf='%u %g %a' /home/.${CTUSER}.shadow)" == "0 0 640" ]; then
+  echo ${CTUSER}:"$(cat /home/.${CTUSER}.shadow)" | chpasswd -e
 else
   CTUSERPWD=${CTUSERPWD:-$(pwgen 12)}
-  echo $CTUSER:"$CTUSERPWD" | chpasswd
+  echo ${CTUSER}:"${CTUSERPWD}" | chpasswd
 fi
-passwd -u $CTUSER
-usermod -a -G sudo $CTUSER
+passwd -u ${CTUSER}
+usermod -a -G sudo ${CTUSER}
 
 # Add pubkey
-if [ "$PUBKEY" != "none" ]; then
-  echo "$PUBKEY" >> /home/$CTUSER/.ssh/authorized_keys
-  chmod 600 /home/$CTUSER/.ssh/authorized_keys
+if [ "${PUBKEY}" != "none" ]; then
+  echo "${PUBKEY}" >> /home/${CTUSER}/.ssh/authorized_keys
+  chmod 600 /home/${CTUSER}/.ssh/authorized_keys
 fi
+
+# create additional groups
+for gr_n_id in ${CTUSERGROUPS}; do
+  gr_name=${gr_n_id%:*}
+  gr_id=${gr_n_id#*:}
+  groupadd --non-unique --gid ${gr_id} ${gr_name}
+  usermod -a -G ${gr_name} ${CTUSER}
+done
 
 # Run init script in background 
 tmux new-session -d -s init '/bin/init.sh'
@@ -37,14 +45,14 @@ create_key() {
     file="$1"
     shift
 
-    if [ ! -f "$file" ] ; then
-        echo -n $msg
-        ssh-keygen -q -f "$file" -N '' "$@"
+    if [ ! -f "${file}" ] ; then
+        echo -n ${msg}
+        ssh-keygen -q -f "${file}" -N '' "$@"
         echo
         if which restorecon >/dev/null 2>&1; then
-            restorecon "$file" "$file.pub"
+            restorecon "${file}" "${file}.pub"
         fi
-        ssh-keygen -l -f "$file.pub"
+        ssh-keygen -l -f "${file}.pub"
     fi
 }
 

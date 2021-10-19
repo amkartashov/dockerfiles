@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 exec >>/home/.init.log 2>&1
 

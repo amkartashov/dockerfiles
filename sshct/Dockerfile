@@ -7,6 +7,8 @@ ENTRYPOINT ["/bin/entrypoint"]
 ENV CTUSER me
 ENV CTUSERID 1000
 ENV CTUSERPWD ""
+# CTUSERGROUPS - space separated list of group:id, f.e. CTUSERGROUPS="firstgroup:1011 secondgroup:1012"
+ENV CTUSERGROUPS docker:999
 ENV CTTIMEZONE Asia/Novosibirsk
 ENV CTLOCALE ru_RU.UTF-8
 ENV PUBKEY none
