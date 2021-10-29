@@ -20,7 +20,7 @@ RUN yes | unminimize
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     curl wget ca-certificates \
-    apt-file apt-transport-https \
+    apt-file apt-transport-https aptitude \
     lsb-release software-properties-common \
     dirmngr debian-archive-keyring gnupg \
     dialog locales \
@@ -91,8 +91,10 @@ RUN apt-get update -y && \
     ncdu mc \
     mariadb-client postgresql-client redis-tools \
     libvirt-clients \
-    git build-essential gdb \
+    git build-essential gdb pkg-config \
+    libssl-dev \
     python python3-pip libpython3-dev \
+    php \
     openjdk-11-jdk \
     protobuf-compiler golang-goprotobuf-dev \
     clang lldb lld clang-format \
@@ -100,6 +102,7 @@ RUN apt-get update -y && \
     cmake cmake-doc ninja-build \
     qemu binfmt-support qemu-user-static \
     gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu g++-aarch64-linux-gnu \
+    moreutils \
     \
     google-cloud-sdk kubectl \
     azure-cli \
