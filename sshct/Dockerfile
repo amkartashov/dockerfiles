@@ -74,9 +74,13 @@ RUN DEB_RELEASE=$(lsb_release --short --codename) \
     && \
     echo == buildah && \
     curl -sSL https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${DEB_VERSION_ID}/Release.key \
-    | sudo apt-key add - && \
+    | apt-key add - && \
     echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${DEB_VERSION_ID}/ /" \
     > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
+    && \
+    echo == hashicorp && \
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
+    apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $DEB_RELEASE main" \
     && echo done
 
 # Additional packages
@@ -111,11 +115,10 @@ RUN apt-get update -y && \
     nodejs \
     yarn \
     buildah \
+    terraform packer \
     && apt-get clean
 
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
     && apt-get clean
-
-
 
