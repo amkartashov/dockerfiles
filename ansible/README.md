@@ -9,11 +9,11 @@ Provided that you have all playbook information (cfg/hosts/vault/keys/etc) in a 
 ```bash
 cd playbook_dir
 # run shell
-docker run -ti --rm --volume `pwd`:/ansible gorilych/ansible
+docker run -ti --rm --volume `pwd`:/ansible ghcr.io/amkartashov/ansible
 # run any other command
-docker run -ti --rm --volume `pwd`:/ansible gorilych/ansible ansible --version
+docker run -ti --rm --volume `pwd`:/ansible ghcr.io/amkartashov/ansible ansible --version
 # run playbook
-docker run -ti --rm --volume `pwd`:/ansible gorilych/ansible ansible-playbook site.yml
+docker run -ti --rm --volume `pwd`:/ansible ghcr.io/amkartashov/ansible ansible-playbook site.yml
 ```
 
 If `requirements.txt` exists in playbook directory, it will install needed python modules with pip.
