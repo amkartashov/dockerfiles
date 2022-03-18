@@ -23,8 +23,10 @@ jobs:
     strategy:
       matrix:
         image:
-          - sshct
           - ansible
+          - openvpn
+          - perf
+          - sshct
 
     steps:
       - name: Checkout repository
