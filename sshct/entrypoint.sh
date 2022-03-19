@@ -66,4 +66,4 @@ create_key "Creating SSH2 ED25519 key; this may take some time ..." \
   /home/.sshkeys/ssh_host_ed25519_key -t ed25519
 
 # start ssh daemon
-exec /usr/sbin/sshd -Def /etc/ssh/sshd_config
+exec /usr/sbin/sshd -Def /etc/ssh/sshd_config -p ${CT_SSH_PORT:-22}

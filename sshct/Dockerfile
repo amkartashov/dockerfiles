@@ -11,6 +11,7 @@ ENV CTUSERPWD ""
 ENV CTUSERGROUPS docker:999
 ENV CTTIMEZONE Asia/Novosibirsk
 ENV CTLOCALE ru_RU.UTF-8
+ENV CT_SSH_PORT 22
 ENV PUBKEY none
 
 # Unminimize, see https://wiki.ubuntu.com/Minimal
