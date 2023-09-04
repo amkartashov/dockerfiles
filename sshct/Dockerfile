@@ -1,18 +1,8 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 VOLUME /home
 EXPOSE 22
 ENTRYPOINT ["/bin/entrypoint"]
-
-ENV CTUSER me
-ENV CTUSERID 1000
-ENV CTUSERPWD ""
-# CTUSERGROUPS - space separated list of group:id, f.e. CTUSERGROUPS="firstgroup:1011 secondgroup:1012"
-ENV CTUSERGROUPS docker:999
-ENV CTTIMEZONE Asia/Novosibirsk
-ENV CTLOCALE ru_RU.UTF-8
-ENV CT_SSH_PORT 22
-ENV PUBKEY none
 
 # Unminimize, see https://wiki.ubuntu.com/Minimal
 RUN yes | unminimize
@@ -26,10 +16,12 @@ RUN apt-get update -y && \
     dirmngr debian-archive-keyring gnupg \
     dialog locales \
     openssh-server bash tmux sudo \
+    tzdata \
     && apt-get clean
 
 # Copy init scripts
 ADD sshd_config /etc/ssh/sshd_config
+ADD tmux.conf /etc/tmux.conf
 ADD entrypoint.sh /bin/entrypoint
 RUN chmod +x /bin/entrypoint
 ADD init.sh /bin/init.sh
@@ -49,8 +41,8 @@ RUN DEB_RELEASE=$(lsb_release --short --codename) \
     && \
     echo == packages.microsoft.com && \
     curl -sL https://packages.microsoft.com/keys/microsoft.asc \
-    | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg && \
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $DEB_RELEASE main" \
+    | gpg --dearmor -o /usr/share/keyrings/microsoft.asc.gpg && \
+    echo "deb [ signed-by=/usr/share/keyrings/microsoft.asc.gpg ] https://packages.microsoft.com/repos/azure-cli/ $DEB_RELEASE main" \
     >  /etc/apt/sources.list.d/azure-cli.list \
     && \
     echo == git-lfs && \
@@ -59,25 +51,21 @@ RUN DEB_RELEASE=$(lsb_release --short --codename) \
     >  /etc/apt/sources.list.d/github_git-lfs.list \
     && \
     echo == mongodb && \
-    curl -sS https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add - && \
-    echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $DEB_RELEASE/mongodb-org/4.4 multiverse" \
-    > /etc/apt/sources.list.d/mongodb-org-4.4.list \
+    curl -sS https://pgp.mongodb.com/server-7.0.asc \
+    | gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+    && \
+    echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu $DEB_RELEASE/mongodb-org/7.0 multiverse" \
+    > /etc/apt/sources.list.d/mongodb-org-7.0.list \
     && \
     echo == nodejs && \
     curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
-    echo "deb https://deb.nodesource.com/node_12.x $DEB_RELEASE main" \
+    echo "deb https://deb.nodesource.com/node_18.x $DEB_RELEASE main" \
     > /etc/apt/sources.list.d/nodesource.list \
     && \
     echo == yarn && \
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" \
     > /etc/apt/sources.list.d/yarn.list \
-    && \
-    echo == buildah && \
-    curl -sSL https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${DEB_VERSION_ID}/Release.key \
-    | apt-key add - && \
-    echo "deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${DEB_VERSION_ID}/ /" \
-    > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list \
     && \
     echo == hashicorp && \
     curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - && \
@@ -98,7 +86,7 @@ RUN apt-get update -y && \
     libvirt-clients \
     git build-essential gdb pkg-config \
     libssl-dev \
-    python python3-pip libpython3-dev \
+    python-is-python3 python3-pip libpython3-dev \
     php \
     openjdk-11-jdk \
     protobuf-compiler golang-goprotobuf-dev \
